@@ -1,0 +1,12 @@
+{
+  "name": "CoinGame",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "grunt-cli": "*",
+    "grunt-shell-spawn": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-smushit": "*",
+    "lodash": "*"
+  }
+}

@@ -1,11 +1,13 @@
 var res = {
     HelloWorld_png : "res/HelloWorld.png",
-    Player_png: "res/player.png",
+    Player_png: "res/player.png"
 
 };
 
 var g_resources = [
     "res/weapons/jian01.png",
+    "res/weapons/spear01.png",
+
     "res/dongzuo-1p/jingzhi-1p.png",
     "res/dongzuo-1p/touzhi01-1p.png",
     "res/dongzuo-1p/touzhi02-1p.png",

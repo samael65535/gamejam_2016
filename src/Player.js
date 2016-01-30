@@ -11,6 +11,8 @@ var Player = cc.Sprite.extend({
     playerNum: 0,
     isBlock: false,
     isDeath: false,
+    _triggerWidth: 50,
+    _triggerHeight: 20,
     ctor: function(playerNum) {
         this._super("res/dongzuo-1p/zou01-1p.png");
         this.setCascadeColorEnabled(true);
@@ -35,7 +37,17 @@ var Player = cc.Sprite.extend({
         this._weapon = new Sword(this);
         this._headSprite.addChild(this._weapon);
         this._weapon.checkOrder();
+
+        this._board = new cc.LayerColor(cc.color(25, 25, 25, 255));
+        this._board.setContentSize(cc.size(this._triggerWidth, this._triggerHeight));
+        this.addChild(this._board, JAM_ORDER.board);
+
         return true;
+    },
+
+    getRect: function() {
+        var pos = this.getPosition();
+        return cc.rect(pos.x, pos.y, this._triggerWidth, this._triggerHeight);
     },
 
     startMoving: function() {
@@ -252,5 +264,9 @@ var Player = cc.Sprite.extend({
         this.getParent().addChild(blood, JAM_ORDER.board);
         this.removeFromParent();
         this.removeAllChildren();
+    },
+
+    loadWeapon: function(weapon) {
+        console.log("hello");
     }
 });

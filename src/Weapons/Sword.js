@@ -23,7 +23,7 @@ var Sword = cc.Sprite.extend({
 
     attack: function() {
         if (this._isProgressing == true) return;
-        this._isProgressing  = true;
+        this._isProgressing = true;
         this._owner.attackAnimation(this.frameName, this.startFrame, this.endFrame)
         var action = cc.moveBy(2.5/24, cc.p(0, 15));
         this.runAction(cc.sequence(
@@ -43,15 +43,18 @@ var Sword = cc.Sprite.extend({
             if(this._owner.playerNum == p.playerNum || p.isDeath) return;
             var rectW1 = this.getBoundingBoxToWorld();
             var rectW2 = p._weapon.getBoundingBoxToWorld();
-            var rect1 = this._owner.getBoundingBoxToWorld();
-            var rect2 = p.getBoundingBoxToWorld();
+            var rect2 = p.getRect();
 
             if (cc.rectIntersectsRect(rectW1, rectW2)) {
                 p.pushBack();
                 this._owner.pushBack();
             } else if (cc.rectIntersectsRect(rectW1, rect2) && !p.isDeath) {
-                p._movingType = 0;
-                p.doDeath(this._owner._movingType);
+                var flag = 1;
+                if (rectW1.y <= rect2.y) flag = 1;
+                else if (rectW1.y >= rect2.y) flag = 3;
+                else if (rectW1.x <= rect2.x) flag = 4;
+                else if (rectW1.x >= rect2.x) flag = 2;
+                p.doDeath(flag);
                 this._owner._movingType = 0
             }
         }, this);

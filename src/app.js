@@ -3,15 +3,17 @@ var GameLayer = cc.Layer.extend({
     sprite:null,
     _board: null,
     _playerArray: null,
-    _triggerArray: null,
+    _trapArray: null,
+    _itemArray: null,
 
     ctor:function () {
         this._super();
         var size = cc.winSize;
 
         this._playerArray = [];
-        this._triggerArray = [];
-        var p= new Player(1);
+        this._itemArray = [];
+
+        var p = new Player(1);
         p.attr({
             x: size.width / 2,
             y: size.height / 2
@@ -25,7 +27,6 @@ var GameLayer = cc.Layer.extend({
             y: size.height / 4
         });
 
-
         this._playerArray.push(p);
         this.addChild(p, JAM_ORDER.player);
 
@@ -36,15 +37,31 @@ var GameLayer = cc.Layer.extend({
             y: size.height * 0.1
         });
         this.addChild(this._board, JAM_ORDER.board);
+
+        p = new SpearItem();
+        this._itemArray.push(p);
+        p.attr({
+            x: size.width / 4,
+            y: size.height / 4
+        });
+        this.addChild(p,JAM_ORDER.board);
+
         this.scheduleUpdate();
         return true;
     },
 
     update: function(dt) {
+        this.checkGround(dt); // 地图道具
         this.checkPlayerEach(dt); // 玩家相互判定
         this.checkBoard(dt);   // 出界
         this.checkWeapons(dt); // 武器碰撞判定
-        this.checkTrigger(dt); // 地面陷阱判定
+        this.checkTrap(dt); // 地面陷阱判定
+    },
+
+    checkGround: function(dt) {
+        _.each(this._itemArray, function(v, k) {
+            v.checkPlayer(this._playerArray);
+        }, this);
     },
 
     checkPlayerEach: function() {
@@ -53,8 +70,8 @@ var GameLayer = cc.Layer.extend({
         }, this)
     },
 
-    checkTrigger: function(dt) {
-        _.each(this._triggerArray, function(v, k) {
+    checkTrap: function(dt) {
+        _.each(this._trapArray, function(v, k) {
 
         }, this)
     },
@@ -75,7 +92,6 @@ var GameLayer = cc.Layer.extend({
             } else {
                 console.log("death");
             }
-
         }, this);
     }
 });

@@ -215,6 +215,9 @@ var Player = cc.Sprite.extend({
             var rect1 = v.getBoundingBox();
             var rect2 = this.getBoundingBox();
             this.isBlock = cc.rectIntersectsRect(rect1, rect2);
+            if (v._movingType == this._movingType) {
+                this._movingType = 0;
+            }
         }, this);
     }
 });

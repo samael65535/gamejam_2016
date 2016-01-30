@@ -11,7 +11,7 @@ var GameLayer = cc.Layer.extend({
 
         this._playerArray = [];
         this._triggerArray = [];
-        var p= new Player();
+        var p= new Player(1);
         p.attr({
             x: size.width / 2,
             y: size.height / 2
@@ -19,7 +19,17 @@ var GameLayer = cc.Layer.extend({
         this._playerArray.push(p);
         this.addChild(p, JAM_ORDER.player);
 
-        this._board = new cc.LayerColor(cc.color(255, 0, 0, 255));
+        p= new Player(2);
+        p.attr({
+            x: size.width / 3,
+            y: size.height / 4
+        });
+
+
+        this._playerArray.push(p);
+        this.addChild(p, JAM_ORDER.player);
+
+        this._board = new cc.LayerColor(cc.color(25, 25, 25, 255));
         this._board.setContentSize(cc.size(size.width * 0.8, size.height * 0.8));
         this._board.attr({
             x: size.width * 0.1,
@@ -31,10 +41,16 @@ var GameLayer = cc.Layer.extend({
     },
 
     update: function(dt) {
+        this.checkPlayerEach(dt); // 玩家相互判定
         this.checkBoard(dt);   // 出界
         this.checkWeapons(dt); // 武器碰撞判定
         this.checkTrigger(dt); // 地面陷阱判定
-        // this.checkPlayerEach(dt); // 玩家相互判定
+    },
+
+    checkPlayerEach: function() {
+        _.each(this._playerArray, function(v, k) {
+            v.checkPlayerCollide(this._playerArray);
+        }, this)
     },
 
     checkTrigger: function(dt) {
@@ -46,7 +62,6 @@ var GameLayer = cc.Layer.extend({
     checkWeapons: function(dt) {
 
     },
-
 
     checkBoard: function() {
         var rect = this._board.getBoundingBox();
@@ -60,10 +75,6 @@ var GameLayer = cc.Layer.extend({
             }
 
         }, this);
-    },
-
-    endGame: function() {
-
     }
 });
 

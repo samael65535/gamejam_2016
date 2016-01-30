@@ -13,7 +13,9 @@
 
     "jsList" : [
       "src/libs/underscore.js",
+      "src/Weapons/Sword.js",
       "src/Config.js",
+      "src/Util.js",
       "src/Player.js",
       "src/resource.js",
       "src/app.js"

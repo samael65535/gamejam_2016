@@ -231,7 +231,6 @@ var Player = cc.Sprite.extend({
         var action = Util.createAnimation("res/effect/feijian0", 1, 4, 2/24, ".png");
         blood.runAction(action);
         var r = 0;
-        console.log(r);
         switch(type) {
             case 1:
                 r = 180;

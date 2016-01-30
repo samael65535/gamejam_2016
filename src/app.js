@@ -21,7 +21,7 @@ var GameLayer = cc.Layer.extend({
 
         p= new Player(2);
         p.attr({
-            x: size.width / 3,
+            x: size.width / 2,
             y: size.height / 4
         });
 

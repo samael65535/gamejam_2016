@@ -10,8 +10,11 @@ var Player = cc.Sprite.extend({
     _headSprite: null,
     playerNum: 0,
     isBlock: false,
+    isDeath: false,
     ctor: function(playerNum) {
         this._super("res/dongzuo-1p/zou01-1p.png");
+        this.setCascadeColorEnabled(true);
+
         this._headSprite = new cc.Sprite("res/dongzuo-1p/jingzhi-1p.png");
         this.attr({
             anchorX: 0.5,
@@ -54,7 +57,6 @@ var Player = cc.Sprite.extend({
         //this._headSprite.runAction(
         //    animationAction
         //);
-        console.log("heheh")
     },
 
     stopAttackAnimation: function() {
@@ -111,7 +113,7 @@ var Player = cc.Sprite.extend({
 
     onEnter: function () {
         this._super();
-        cc.eventManager.addListener({
+        this.listener = cc.EventListener.create({
             event: cc.EventListener.KEYBOARD,
             onKeyPressed:  function(keyCode, event){
                 if (this._isAvailable == false) return;
@@ -188,15 +190,15 @@ var Player = cc.Sprite.extend({
                 }
                 return;
             }
-        }, this);
+        });
+        cc.eventManager.addListener(this.listener, this);
     },
     onExit: function () {
         this._super();
-        cc.eventManager.removeListeners(cc.EventListener.KEYBOARD);
+        cc.eventManager.removeListener(this.listener);
     },
 
     pushBack: function() {
-
         this._isAvailable = false;
         var oldRot = this.getRotation();
         var radians = cc.degreesToRadians(oldRot);
@@ -212,13 +214,26 @@ var Player = cc.Sprite.extend({
 
     checkPlayerCollide: function(playerArray) {
         _.each(playerArray, function(v, k) {
-            if (v.playerNum == this.playerNum) return;
+            if (v.playerNum == this.playerNum|| v.isDeath == true) return;
             var rect1 = v.getBoundingBox();
             var rect2 = this.getBoundingBox();
-            this.isBlock = cc.rectIntersectsRect(rect1, rect2);
+            this.isBlock = cc.rectIntersectsRect(rect1, rect2) &&  this.isDeath == false && v.isDeath == false;
             if (v._movingType == this._movingType && this.isBlock) {
                 this._movingType = 0;
             }
         }, this);
+    },
+
+    doDeath: function() {
+        if (this.isDeath) return;
+        this.isDeath = true;
+        var blood = new cc.Sprite("res/effect/feijian01.png");
+        var action = Util.createAnimation("res/effect/feijian0", 1, 4, 2/24, ".png");
+        blood.runAction(action);
+        blood.setRotation(this.getRotation() - 180);
+        blood.setPosition(this.getPosition());
+        this.getParent().addChild(blood, JAM_ORDER.board);
+        this.removeFromParent();
+        this.removeAllChildren();
     }
 });

@@ -40,20 +40,19 @@ var Sword = cc.Sprite.extend({
 
     checkDamage: function(playerArray) {
         _.each(playerArray, function(p, k){
-            if(this._owner.playerNum == p.playerNum) return;
-
-
-            var rectW1 = p._weapon.getBoundingBoxToWorld();
-            var rectW2 = this.getBoundingBoxToWorld();
-
+            if(this._owner.playerNum == p.playerNum || p.isDeath) return;
+            var rectW1 = this.getBoundingBoxToWorld();
+            var rectW2 = p._weapon.getBoundingBoxToWorld();
             var rect1 = this._owner.getBoundingBoxToWorld();
             var rect2 = p.getBoundingBoxToWorld();
 
             if (cc.rectIntersectsRect(rectW1, rectW2)) {
                 p.pushBack();
                 this._owner.pushBack();
-            } else if (cc.rectIntersectsRect(rectW1, rect2)) {
-
+            } else if (cc.rectIntersectsRect(rectW1, rect2) && !p.isDeath) {
+                p._movingType = 0;
+                this._owner._movingType = 0
+                p.doDeath();
             }
         }, this);
     }

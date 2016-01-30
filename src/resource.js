@@ -31,7 +31,12 @@ var g_resources = [
     "res/dongzuo-2p/tuci03-2p.png",
 
     "res/dongzuo-2p/zou01-2p.png",
-    "res/dongzuo-2p/zou02-2p.png"
+    "res/dongzuo-2p/zou02-2p.png",
+
+    "res/effect/feijian01.png",
+    "res/effect/feijian02.png",
+    "res/effect/feijian03.png",
+    "res/effect/feijian04.png",
 ];
 for (var i in res) {
     g_resources.push(res[i]);

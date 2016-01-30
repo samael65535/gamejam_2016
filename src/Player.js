@@ -6,7 +6,7 @@ var Player = cc.Sprite.extend({
     _isAvailable: false,
     _isMoving: false,
     _movingType: 0,
-    _weapons: null,
+    _weapon: null,
     _headSprite: null,
     playerNum: 0,
     isBlock: false,
@@ -29,10 +29,9 @@ var Player = cc.Sprite.extend({
         this._isAvailable = true;
         this.scheduleUpdate();
         this._lastKeyCode = null;
-        this._weapons = new Sword(this);
-        this._headSprite.addChild(this._weapons);
-        this._weapons.checkOrder();
-        this.startMoving();
+        this._weapon = new Sword(this);
+        this._headSprite.addChild(this._weapon);
+        this._weapon.checkOrder();
         return true;
     },
 
@@ -46,7 +45,7 @@ var Player = cc.Sprite.extend({
     },
 
     attack: function() {
-        this._weapons.attack()
+        this._weapon.attack()
     },
 
     attackAnimation: function(weaponsName, start, end) {
@@ -63,7 +62,7 @@ var Player = cc.Sprite.extend({
     },
 
     releaseAttack: function() {
-        this._weapons.releaseAttack();
+        this._weapon.releaseAttack();
     },
 
     update: function(dt) {
@@ -72,6 +71,7 @@ var Player = cc.Sprite.extend({
     },
 
     move: function(type, dt) {
+        if (this._isAvailable == false) return;
         if (type == 0) {
             this.stopAnimation();
             this._isMoving = false;
@@ -102,7 +102,7 @@ var Player = cc.Sprite.extend({
             default:
                 return;
         }
-
+        this.isBlock = false;
         this.attr({
             x: oldX + x,
             y: oldY + y
@@ -173,7 +173,6 @@ var Player = cc.Sprite.extend({
 
             onKeyReleased: function(keyCode, event){
                 var s = event.getCurrentTarget();
-                cc.log("Key with keycode " + keyCode + " released" );
                 if (keyCode == s._lastKeyCode) {
                     s._movingType = 0;
                     s._lastKeyCode = null;
@@ -187,6 +186,7 @@ var Player = cc.Sprite.extend({
                         s.releaseAttack();
                     }
                 }
+                return;
             }
         }, this);
     },
@@ -196,11 +196,12 @@ var Player = cc.Sprite.extend({
     },
 
     pushBack: function() {
+
         this._isAvailable = false;
         var oldRot = this.getRotation();
         var radians = cc.degreesToRadians(oldRot);
-        var x = Math.sin(radians) * 1 * -5;
-        var y = Math.cos(radians) * 1 * -5;
+        var x = Math.sin(radians) * 1 * -10;
+        var y = Math.cos(radians) * 1 * -10;
         this.runAction(cc.sequence(
             cc.moveBy(0.2, cc.p(x, y)),
             cc.callFunc(function() {
@@ -215,7 +216,7 @@ var Player = cc.Sprite.extend({
             var rect1 = v.getBoundingBox();
             var rect2 = this.getBoundingBox();
             this.isBlock = cc.rectIntersectsRect(rect1, rect2);
-            if (v._movingType == this._movingType) {
+            if (v._movingType == this._movingType && this.isBlock) {
                 this._movingType = 0;
             }
         }, this);

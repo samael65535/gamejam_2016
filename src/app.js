@@ -60,16 +60,18 @@ var GameLayer = cc.Layer.extend({
     },
 
     checkWeapons: function(dt) {
-
+        _.each(this._playerArray, function(v, k) {
+            var weapon = v._weapon;
+            weapon.checkDamage(this._playerArray);
+        }, this)
     },
 
     checkBoard: function() {
         var rect = this._board.getBoundingBox();
-        _.each(this._playerArray, function(v, k ) {
+        _.each(this._playerArray, function(v, k) {
             var pos = v.getPosition();
             if (rect.x < pos.x && pos.x < rect.x + rect.width
                 && rect.y < pos.y && pos.y < rect.height + rect.y){
-
             } else {
                 console.log("death");
             }

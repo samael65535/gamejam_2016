@@ -51,8 +51,8 @@ var Sword = cc.Sprite.extend({
                 this._owner.pushBack();
             } else if (cc.rectIntersectsRect(rectW1, rect2) && !p.isDeath) {
                 p._movingType = 0;
+                p.doDeath(this._owner._movingType);
                 this._owner._movingType = 0
-                p.doDeath();
             }
         }, this);
     }

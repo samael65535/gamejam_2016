@@ -224,13 +224,31 @@ var Player = cc.Sprite.extend({
         }, this);
     },
 
-    doDeath: function() {
+    doDeath: function(type) {
         if (this.isDeath) return;
         this.isDeath = true;
         var blood = new cc.Sprite("res/effect/feijian01.png");
         var action = Util.createAnimation("res/effect/feijian0", 1, 4, 2/24, ".png");
         blood.runAction(action);
-        blood.setRotation(this.getRotation() - 180);
+        var r = 0;
+        console.log(r);
+        switch(type) {
+            case 1:
+                r = 180;
+                break;
+            case 2:
+                r = 270;
+                break;
+            case 3:
+                r = 0;
+                break;
+            case 4:
+                r = 90;
+                break;
+            default:
+                break;
+        }
+        blood.setRotation(r);
         blood.setPosition(this.getPosition());
         this.getParent().addChild(blood, JAM_ORDER.board);
         this.removeFromParent();

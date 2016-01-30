@@ -5,5 +5,9 @@ var Trap = cc.Sprite.extend({
     ctor: function() {
         this._super();
         return true;
+    },
+
+    action: function() {
+
     }
 });

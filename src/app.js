@@ -3,12 +3,14 @@ var GameLayer = cc.Layer.extend({
     sprite:null,
     _board: null,
     _playerArray: null,
+    _triggerArray: null,
 
     ctor:function () {
         this._super();
         var size = cc.winSize;
 
         this._playerArray = [];
+        this._triggerArray = [];
         var p= new Player();
         p.attr({
             x: size.width / 2,
@@ -29,8 +31,22 @@ var GameLayer = cc.Layer.extend({
     },
 
     update: function(dt) {
-        this.checkBoard();
+        this.checkBoard(dt);   // 出界
+        this.checkWeapons(dt); // 武器碰撞判定
+        this.checkTrigger(dt); // 地面陷阱判定
+        // this.checkPlayerEach(dt); // 玩家相互判定
     },
+
+    checkTrigger: function(dt) {
+        _.each(this._triggerArray, function(v, k) {
+
+        }, this)
+    },
+
+    checkWeapons: function(dt) {
+
+    },
+
 
     checkBoard: function() {
         var rect = this._board.getBoundingBox();

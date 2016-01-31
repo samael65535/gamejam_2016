@@ -9,9 +9,23 @@ var GameLayer = cc.Layer.extend({
     _bg: null,
     _r1: null,
     _r2: null,
+
+    _score1: 0,
+    _score2: 0,
+    _score1Label: null,
+    _score2Label: null,
+
     ctor:function () {
         this._super();
-        var size = cc.winSize;
+
+        this._score1Label = new cc.LabelTTF("1P 得分: " + this._score1, "Arial", 30);
+        this._score1Label.setPosition(300, 20);
+        this.addChild(this._score1Label, 100);
+
+        this._score2Label = new cc.LabelTTF("2P 得分: " + this._score2, "Arial", 30);
+        this._score2Label.setPosition(cc.winSize.width - 300,  20)
+        this.addChild(this._score2Label, 100);
+
 
         this._playerArray = [];
         this._itemArray = [];
@@ -54,8 +68,6 @@ var GameLayer = cc.Layer.extend({
             this.addChild(wall, JAM_ORDER.player, JAM_CHILD_TAG.TRIGGER);
         }
 
-
-
         this.scheduleUpdate();
         GameLayerInstance = this;
         var posList = [
@@ -71,8 +83,7 @@ var GameLayer = cc.Layer.extend({
         var tp = _.sample(posList);
         var p = new SpearItem(false, 0);
         p.setPosition(tp[0]);
-        this.addChild(p, JAM_ORDER.board, JAM_CHILD_TAG.ITEM);
-
+        this.addChild(p, JAM_ORDER.board + 1, JAM_CHILD_TAG.ITEM);
 
         for (var i = 0; i < 6; i++) {
             var v = new Treasure();
@@ -183,6 +194,17 @@ var GameLayer = cc.Layer.extend({
     },
 
     rebornPlayer: function(playerNum, pos) {
+        if (playerNum == 1) {
+            this._score2 += 1;
+            this._score2Label.setString("2P 得分: " + this._score2)
+        }else {
+            this._score1 += 1;
+            this._score1Label.setString("1P 得分: " + this._score1)
+        }
+
+
+        this._score2Label = new cc.LabelTTF("2P 得分: " + this._score2, "Arial", 30);
+        this._score2Label.setPosition(cc.winSize.width - 300,  20)
         var player = _.filter(this._playerArray, function(v) {
             return v.isDeath == false;
         })[0];

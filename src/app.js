@@ -54,27 +54,27 @@ var GameLayer = cc.Layer.extend({
             this.addChild(wall, JAM_ORDER.player, JAM_CHILD_TAG.TRIGGER);
         }
 
-        var p = new SpearItem(false,  0);
-        p.attr({
-            x: cc.winSize.width / 4,
-            y: cc.winSize.height / 4
-        });
-        this.addChild(p, JAM_ORDER.board, JAM_CHILD_TAG.ITEM);
+
 
         this.scheduleUpdate();
         GameLayerInstance = this;
         var posList = [
-            "n",
-            [cc.p(30, cc.winSize.height - 30), cc.p(0, 1)],
-            [cc.p(cc.winSize.width / 2, cc.winSize.height - 30), cc.p(0.5, 1)],
-            [cc.p(cc.winSize.width - 30, cc.winSize.height - 30), cc.p(1, 1)],
+            [cc.p(123 / 2 + 30, cc.winSize.height - 98 / 2 - 30), cc.p(0.5,0.5)],
+            [cc.p(cc.winSize.width / 2, cc.winSize.height - 98/2 - 30), cc.p(0.5,0.5)],
+            [cc.p(cc.winSize.width - 123/2 - 30, cc.winSize.height - 98/2 - 30), cc.p(0.5, 0.5)],
 
-            [cc.p(30, 30), cc.p(0, 0)],
-            [cc.p(cc.winSize.width / 2, 30), cc.p(0.5, 0)],
-            [cc.p(cc.winSize.width - 30 ,30), cc.p(1, 0)]
+            [cc.p(123/2 + 30, 98 / 2 + 30), cc.p(0.5, 0.5)],
+            [cc.p(cc.winSize.width / 2, 98/2+ 30), cc.p(0.5, 0.5)],
+            [cc.p(cc.winSize.width - 123/2-30 ,98/2 + 30), cc.p(0.5, 0.5)]
 
         ];
-        for (var i = 1; i <= 6; i++) {
+        var tp = _.sample(posList);
+        var p = new SpearItem(false, 0);
+        p.setPosition(tp[0]);
+        this.addChild(p, JAM_ORDER.board, JAM_CHILD_TAG.ITEM);
+
+
+        for (var i = 0; i < 6; i++) {
             var v = new Treasure();
             v.setPosition(posList[i][0]);
             v.setAnchorPoint(posList[i][1]);
@@ -86,7 +86,7 @@ var GameLayer = cc.Layer.extend({
         this.addChild(spur, JAM_ORDER.trigger,JAM_CHILD_TAG.TRIGGER);
         var spurSize = spur.getContentSize();
 
-////
+        //
         var r1 = new Reborn();
         r1.setPosition(cc.winSize.width / 4, cc.winSize.height / 2);
         this.addChild(r1, JAM_ORDER.trigger,JAM_CHILD_TAG.TRIGGER);
@@ -97,7 +97,8 @@ var GameLayer = cc.Layer.extend({
         this.addChild(r2, JAM_ORDER.trigger,JAM_CHILD_TAG.TRIGGER);
         spurSize.height += 20;
         this._r2 = r2;
-        // ///
+
+        ///
         var h1 = new Hole();
         h1.setPosition(cc.winSize.width / 5,  cc.winSize.height / 2 - spurSize.height / 2);
         this.addChild(h1, JAM_ORDER.trigger,JAM_CHILD_TAG.TRIGGER);
@@ -138,7 +139,6 @@ var GameLayer = cc.Layer.extend({
     },
 
     update: function(dt) {
-
         this._itemArray = _.filter(this.getChildren(), function(v, k) {
             return v.getTag() == JAM_CHILD_TAG.ITEM;
         }, this);

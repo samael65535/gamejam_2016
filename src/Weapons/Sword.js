@@ -13,7 +13,7 @@ var Sword = cc.Sprite.extend({
         this._super("res/weapons/jian01.png");
         this._owner = owner;
         this.setAnchorPoint(0.5, 0);
-        this.setPosition(105, 73);
+        this.setPosition(95, 70);
 
         return true;
     },
@@ -26,7 +26,7 @@ var Sword = cc.Sprite.extend({
         if (this._isProgressing == true) return;
         this._isProgressing = true;
         this._owner.attackAnimation(this.frameName, this.startFrame, this.endFrame)
-        var action = cc.moveBy(2.5/24, cc.p(0, 80));
+        var action = cc.moveBy(2.3/24, cc.p(0, 30));
         this.runAction(cc.sequence(
             action,
             action.reverse(),

@@ -16,23 +16,11 @@ var Player = cc.Sprite.extend({
     _triggerHeight: 20,
     _startLayer: null,
     ctor: function(playerNum) {
-        this._super("res/dongzuo-1p/zou01-1p.png");
+        this._super("res/dongzuo-"+playerNum+"p/jingzhi-"+playerNum+"p.png");
         this.setCascadeColorEnabled(true);
 
-        this._headSprite = new cc.Sprite("res/dongzuo-1p/jingzhi-1p.png");
-        this.attr({
-            anchorX: 0.5,
-            anchorY: 0.5
-        });
         this.playerNum = playerNum;
-        var size = this.getContentSize();
-        this._headSprite.attr({
-            x: size.width / 2,
-            y: 0,
-            anchorX: 0.5,
-            anchorY: 0.2
-        });
-        this.addChild(this._headSprite);
+
         this._isAvailable = true;
         this.scheduleUpdate();
         this._lastKeyCode = null;
@@ -47,8 +35,7 @@ var Player = cc.Sprite.extend({
     },
 
     startMoving: function() {
-        var animationAction = Util.createAnimation("res/dongzuo-1p/zou0", 1, 2, 2/24, "-1p.png");
-        this.runAction(cc.repeatForever(animationAction));
+
     },
 
     stopAnimation: function() {
@@ -60,9 +47,9 @@ var Player = cc.Sprite.extend({
     },
 
     attackAnimation: function(weaponsName, start, end) {
-        var frameName = "res/dongzuo-1p/" + weaponsName;
-        var animationAction = Util.createAnimation(frameName, start, end, 2/24, "-1p.png");
-        this._headSprite.runAction(
+        var frameName = "res/dongzuo-"+this.playerNum+"p/" + weaponsName;
+        var animationAction = Util.createAnimation(frameName, start, end, 2/24, "-"+this.playerNum+"p.png");
+        this.runAction(
             animationAction
         );
     },
@@ -201,11 +188,11 @@ var Player = cc.Sprite.extend({
                     s._lastKeyCode = null;
                 }
                 if (s.playerNum == 1) {
-                    if (keyCode == cc.KEY.space) {
+                    if (keyCode == cc.KEY.p) {
                         s.releaseAttack();
                     }
                 } else if (s.playerNum == 2){
-                    if (keyCode == cc.KEY.p) {
+                    if (keyCode == cc.KEY.space) {
                         s.releaseAttack();
                     }
                 }
@@ -269,16 +256,17 @@ var Player = cc.Sprite.extend({
                 break;
         }
         blood.setRotation(r);
-        var pos = this.getPosition()
+        var pos = this.getPosition();
         this.setVisible(false);
+        this.removeFromParent();
+        this.removeAllChildren();
         blood.setPosition(pos);
+        var playerNum = this.playerNum;
         blood.runAction(cc.sequence(
             cc.delayTime(0.4),
             cc.removeSelf(),
             cc.callFunc(function() {
-                GameLayerInstance.rebornPlayer(this.playerNum, pos);
-                this.removeFromParent();
-                this.removeAllChildren()
+                GameLayerInstance.rebornPlayer(playerNum, pos);
             }.bind(this))
         ));
         GameLayerInstance.addChild(blood, JAM_ORDER.trigger);
@@ -291,14 +279,14 @@ var Player = cc.Sprite.extend({
         this._weapon = new Spear(this);
         this._weapon.setPosition(pos);
 
-        this._headSprite.addChild(this._weapon, 10);
+        this.addChild(this._weapon, 10);
         this._weapon.checkOrder();
     },
 
     resetWeapon: function() {
         if (this._weapon) this._weapon.removeFromParent();
         this._weapon = new Sword(this);
-        this._headSprite.addChild(this._weapon);
+        this.addChild(this._weapon);
         this._weapon.checkOrder();
     }
 

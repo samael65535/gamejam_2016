@@ -3,7 +3,7 @@
  */
 
 var JAM_CONFIG = {
-    move_distance: 100,
+    move_distance: 250,
     rotate: 10,
     UP: 1,
     RIGHT: 2,

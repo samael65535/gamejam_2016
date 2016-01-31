@@ -5,7 +5,10 @@ var GameLayer = cc.Layer.extend({
     _playerArray: null,
     _triggerArray: null,
     _itemArray: null,
-    _wallBG:null,
+    _wallBG: null,
+    _bg: null,
+    _r1: null,
+    _r2: null,
     ctor:function () {
         this._super();
         var size = cc.winSize;
@@ -13,21 +16,13 @@ var GameLayer = cc.Layer.extend({
         this._playerArray = [];
         this._itemArray = [];
         this._triggerArray = [];
-        var p = new Player(1);
-        p.attr({
-            x: size.width / 2,
-            y: size.height / 2
-        });
-        this._playerArray.push(p);
-        this.addChild(p, JAM_ORDER.player, JAM_CHILD_TAG.PLAYER);
 
-        p= new Player(2);
-        p.attr({
-            x: size.width / 2,
-            y: size.height / 4
+        this._bg = new cc.Sprite("res/map/map01.jpg");
+        this._bg.attr({
+            anchorX: 0,
+            anchorY: 0
         });
-
-        this.addChild(p, JAM_ORDER.player, JAM_CHILD_TAG.PLAYER);
+        this.addChild(this._bg, JAM_ORDER.board);
 
         this._wallBG = new cc.Sprite("res/map/qiang.png");
         this._wallBG.attr({
@@ -35,14 +30,6 @@ var GameLayer = cc.Layer.extend({
             anchorY: 0
         });
         this.addChild(this._wallBG, JAM_ORDER.board);
-
-        this._board = new cc.LayerColor(cc.color(25, 25, 25, 255));
-        this._board.setContentSize(cc.size(size.width * 0.8, size.height * 0.8));
-        this._board.attr({
-            x: size.width * 0.1,
-            y: size.height * 0.1
-        });
-        this.addChild(this._board, JAM_ORDER.board);
 
         for (var i = 1 ; i <= 4; i++) {
             var size = cc.size(cc.winSize.width, 6);
@@ -72,10 +59,77 @@ var GameLayer = cc.Layer.extend({
             x: cc.winSize.width / 4,
             y: cc.winSize.height / 4
         });
-        this.addChild(p,JAM_ORDER.board, JAM_CHILD_TAG.ITEM);
+        this.addChild(p, JAM_ORDER.board, JAM_CHILD_TAG.ITEM);
 
         this.scheduleUpdate();
         GameLayerInstance = this;
+        var posList = [
+            "n",
+            [cc.p(30, cc.winSize.height - 30), cc.p(0, 1)],
+            [cc.p(cc.winSize.width / 2, cc.winSize.height - 30), cc.p(0.5, 1)],
+            [cc.p(cc.winSize.width - 30, cc.winSize.height - 30), cc.p(1, 1)],
+
+            [cc.p(30, 30), cc.p(0, 0)],
+            [cc.p(cc.winSize.width / 2, 30), cc.p(0.5, 0)],
+            [cc.p(cc.winSize.width - 30 ,30), cc.p(1, 0)]
+
+        ];
+        for (var i = 1; i <= 6; i++) {
+            var v = new Treasure();
+            v.setPosition(posList[i][0]);
+            v.setAnchorPoint(posList[i][1]);
+            this.addChild(v, JAM_ORDER.trigger,JAM_CHILD_TAG.TRIGGER);
+        }
+
+        var spur = new Spur();
+        spur.setPosition(cc.winSize.width / 2, cc.winSize.height / 2);
+        this.addChild(spur, JAM_ORDER.trigger,JAM_CHILD_TAG.TRIGGER);
+        var spurSize = spur.getContentSize();
+
+////
+        var r1 = new Reborn();
+        r1.setPosition(cc.winSize.width / 4, cc.winSize.height / 2);
+        this.addChild(r1, JAM_ORDER.trigger,JAM_CHILD_TAG.TRIGGER);
+        this._r1 = r1;
+
+        var r2 = new Reborn();
+        r2.setPosition(cc.winSize.width / 4 * 3, cc.winSize.height / 2);
+        this.addChild(r2, JAM_ORDER.trigger,JAM_CHILD_TAG.TRIGGER);
+        spurSize.height += 20;
+        this._r2 = r2;
+        // ///
+        var h1 = new Hole();
+        h1.setPosition(cc.winSize.width / 5,  cc.winSize.height / 2 - spurSize.height / 2);
+        this.addChild(h1, JAM_ORDER.trigger,JAM_CHILD_TAG.TRIGGER);
+
+        var h2 = new Hole();
+        h2.setPosition(cc.winSize.width / 5 , cc.winSize.height / 2 + spurSize.height / 2);
+        this.addChild(h2, JAM_ORDER.trigger,JAM_CHILD_TAG.TRIGGER);
+
+        var h3 = new Hole();
+        h3.setPosition(cc.winSize.width / 5 * 4, cc.winSize.height / 2 - spurSize.height / 2);
+        this.addChild(h3, JAM_ORDER.trigger,JAM_CHILD_TAG.TRIGGER);
+
+        var h4 = new Hole();
+        h4.setPosition(cc.winSize.width / 5 * 4, cc.winSize.height / 2 + spurSize.height / 2);
+        this.addChild(h4, JAM_ORDER.trigger,JAM_CHILD_TAG.TRIGGER);
+
+        var p = new Player(1);
+        p.attr({
+            x: r1.getPositionX(),
+            y: r1.getPositionY(),
+        });
+        this._playerArray.push(p);
+        this.addChild(p, JAM_ORDER.player, JAM_CHILD_TAG.PLAYER);
+
+        p= new Player(2);
+        p.attr({
+            x: r2.getPositionX(),
+            y: r2.getPositionY()
+        });
+
+        this.addChild(p, JAM_ORDER.player,JAM_CHILD_TAG.PLAYER);
+
         return true;
     },
 
@@ -122,7 +176,24 @@ var GameLayer = cc.Layer.extend({
             var weapon = v._weapon;
             weapon.checkDamage(this._playerArray);
         }, this)
+    },
+
+    rebornPlayer: function(playerNum) {
+        var player = _.filter(this._playerArray, function(v) {
+            return v.isDeath == false;
+        })[0];
+        var f = 1;
+        if (player.getPositionX() > cc.winSize.width / 2) f = 1;
+        else f = 2;
+        var p = new Player(playerNum);
+        var r = this["_r" + f];
+        p.attr({
+            x: r.getPositionX(),
+            y: r.getPositionY()
+        });
+        this.addChild(p, JAM_ORDER.player, JAM_CHILD_TAG.PLAYER);
     }
+
 });
 
 var HelloWorldScene = cc.Scene.extend({

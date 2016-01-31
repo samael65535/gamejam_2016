@@ -13,6 +13,10 @@
 
     "jsList" : [
       "src/libs/underscore.js",
+      "src/Trigger/Hole.js",
+      "src/Trigger/Spur.js",
+      "src/Trigger/Reborn.js",
+      "src/Trigger/Treasure.js",
       "src/Trigger/SpearItem.js",
       "src/Trigger/Wall.js",
       "src/Weapons/Sword.js",

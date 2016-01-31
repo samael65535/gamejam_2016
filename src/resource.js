@@ -40,6 +40,7 @@ var g_resources = [
     "res/effect/feijian03.png",
     "res/effect/feijian04.png",
 
+    "res/map/map01.jpg",
     "res/map/qiang.png",
     "res/map/treasure.png",
     "res/map/heidong.png",

@@ -270,10 +270,12 @@ var Player = cc.Sprite.extend({
                 break;
         }
         blood.setRotation(r);
-        blood.setPosition(this.getPosition());
+        var pos = this.getPosition()
+        blood.setPosition(pos);
         GameLayerInstance.addChild(blood, JAM_ORDER.board);
         this.removeFromParent();
         this.removeAllChildren();
+        GameLayerInstance.rebornPlayer(this.playerNum, pos);
     },
 
     loadWeapon: function(weapon) {

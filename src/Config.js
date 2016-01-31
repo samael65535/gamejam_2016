@@ -14,6 +14,7 @@ var JAM_CONFIG = {
 var JAM_ORDER = {
     background: 0,
     board: 10,
+    trigger: 15,
     player: 20
 };
 

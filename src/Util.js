@@ -20,5 +20,14 @@ var Util = {
         var rect1 = node1.getBoundingBoxToWorld();
         var rect2 = node2.getBoundingBoxToWorld();
         return cc.rectIntersectsRect(rect1, rect2);
+    },
+
+    faceType: function(pos1, pos2) {
+        var flag = 1;
+        if (pos1.y <= pos2.y) flag = 1;
+        else if (pos1.y >= pos2.y) flag = 3;
+        else if (pos1.x <= pos2.x) flag = 4;
+        else if (pos1.x >= pos2.x) flag = 2;
+        return flag;
     }
 };

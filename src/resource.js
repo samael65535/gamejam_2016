@@ -39,6 +39,15 @@ var g_resources = [
     "res/effect/feijian02.png",
     "res/effect/feijian03.png",
     "res/effect/feijian04.png",
+
+    "res/map/qiang.png",
+    "res/map/treasure.png",
+    "res/map/heidong.png",
+    "res/map/chushengdi.png",
+    "res/map/dici01.png",
+    "res/map/dici02.png",
+    "res/map/huoju.png",
+    "res/map/jiguankaiguan.png"
 ];
 for (var i in res) {
     g_resources.push(res[i]);

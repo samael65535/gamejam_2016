@@ -25,7 +25,7 @@ var Sword = cc.Sprite.extend({
         if (this._isProgressing == true) return;
         this._isProgressing = true;
         this._owner.attackAnimation(this.frameName, this.startFrame, this.endFrame)
-        var action = cc.moveBy(2.5/24, cc.p(0, 15));
+        var action = cc.moveBy(2.5/24, cc.p(0, 80));
         this.runAction(cc.sequence(
             action,
             action.reverse(),
@@ -40,22 +40,19 @@ var Sword = cc.Sprite.extend({
 
     checkDamage: function(playerArray) {
         _.each(playerArray, function(p, k){
-            if(this._owner.playerNum == p.playerNum || p.isDeath) return;
+            if(this._owner == null || this._owner.playerNum == p.playerNum || p.isDeath) return;
             var rectW1 = this.getBoundingBoxToWorld();
             var rectW2 = p._weapon.getBoundingBoxToWorld();
-            var rect2 = p.getRect();
+            var rect2 = p.getBoundingBoxToWorld();
 
             if (cc.rectIntersectsRect(rectW1, rectW2)) {
                 p.pushBack();
                 this._owner.pushBack();
             } else if (cc.rectIntersectsRect(rectW1, rect2) && !p.isDeath) {
-                var flag = 1;
-                if (rectW1.y <= rect2.y) flag = 1;
-                else if (rectW1.y >= rect2.y) flag = 3;
-                else if (rectW1.x <= rect2.x) flag = 4;
-                else if (rectW1.x >= rect2.x) flag = 2;
-                p.doDeath(flag);
-                this._owner._movingType = 0
+                var pos1 = cc.p(rectW1.x, rectW1.y);
+                var pos2 = cc.p(rect2.x, rect2.y);
+
+                p.doDeath(Util.faceType(pos1,  pos2));
             }
         }, this);
     }

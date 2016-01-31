@@ -5,6 +5,7 @@
 var Player = cc.Sprite.extend({
     _isAvailable: false,
     _isMoving: false,
+    _isMovingAnimation: false,
     _movingType: 0,
     _weapon: null,
     _headSprite: null,
@@ -26,9 +27,9 @@ var Player = cc.Sprite.extend({
         var size = this.getContentSize();
         this._headSprite.attr({
             x: size.width / 2,
-            y: -20,
+            y: 0,
             anchorX: 0.5,
-            anchorY: 0
+            anchorY: 0.2
         });
         this.addChild(this._headSprite);
         this._isAvailable = true;
@@ -66,9 +67,9 @@ var Player = cc.Sprite.extend({
     attackAnimation: function(weaponsName, start, end) {
         var frameName = "res/dongzuo-1p/" + weaponsName;
         var animationAction = Util.createAnimation(frameName, start, end, 2/24, "-1p.png");
-        //this._headSprite.runAction(
-        //    animationAction
-        //);
+        this._headSprite.runAction(
+            animationAction
+        );
     },
 
     stopAttackAnimation: function() {
@@ -86,14 +87,17 @@ var Player = cc.Sprite.extend({
 
     move: function(type, dt) {
         if (this._isAvailable == false) return;
-        if (type == 0) {
-            this.stopAnimation();
-            this._isMoving = false;
+        if (this._isMoving == false) {
+            if(this._isMovingAnimation == true) {
+                this.stopAnimation();
+            }
+            this._isMovingAnimation = false;
             return;
         }
-        if (this._isMoving == false) {
-            this.startMoving();
+        if (this._isMoving && this._isMovingAnimation == false) {
             this._isMoving = true;
+            this._isMovingAnimation = true;
+            this.startMoving();
         }
         var x = 0, y = 0;
         var oldX = this.getPositionX();
@@ -133,21 +137,25 @@ var Player = cc.Sprite.extend({
                 if (s.playerNum == 1) {
                     if (keyCode == cc.KEY.up) {
                         s._movingType = JAM_CONFIG.UP;
+                        s._isMoving = true;
                         s.setRotation(0);
                         s._lastKeyCode = keyCode;
                     }
                     if (keyCode == cc.KEY.down) {
                         s._movingType = JAM_CONFIG.DOWN;
+                        s._isMoving = true;
                         s.setRotation(180);
                         s._lastKeyCode = keyCode;
                     }
                     if (keyCode == cc.KEY.right) {
                         s._movingType = JAM_CONFIG.RIGHT;
+                        s._isMoving = true;
                         s.setRotation(90);
                         s._lastKeyCode = keyCode;
                     }
                     if (keyCode == cc.KEY.left) {
                         s._movingType = JAM_CONFIG.LEFT;
+                        s._isMoving = true;
                         s.setRotation(270);
                         s._lastKeyCode = keyCode;
                     }
@@ -159,21 +167,25 @@ var Player = cc.Sprite.extend({
                 } else if (s.playerNum == 2) {
                     if (keyCode == cc.KEY.w) {
                         s._movingType = JAM_CONFIG.UP;
+                        s._isMoving = true;
                         s.setRotation(0);
                         s._lastKeyCode = keyCode;
                     }
                     if (keyCode == cc.KEY.s) {
                         s._movingType = JAM_CONFIG.DOWN;
+                        s._isMoving = true;
                         s.setRotation(180);
                         s._lastKeyCode = keyCode;
                     }
                     if (keyCode == cc.KEY.d) {
                         s._movingType = JAM_CONFIG.RIGHT;
+                        s._isMoving = true;
                         s.setRotation(90);
                         s._lastKeyCode = keyCode;
                     }
                     if (keyCode == cc.KEY.a) {
                         s._movingType = JAM_CONFIG.LEFT;
+                        s._isMoving = true;
                         s.setRotation(270);
                         s._lastKeyCode = keyCode;
                     }
@@ -188,7 +200,7 @@ var Player = cc.Sprite.extend({
             onKeyReleased: function(keyCode, event){
                 var s = event.getCurrentTarget();
                 if (keyCode == s._lastKeyCode) {
-                    s._movingType = 0;
+                    s._isMoving = false;
                     s._lastKeyCode = null;
                 }
                 if (s.playerNum == 1) {
@@ -267,6 +279,11 @@ var Player = cc.Sprite.extend({
     },
 
     loadWeapon: function(weapon) {
-        console.log("hello");
+        var pos = this._weapon.getPosition();
+        this._weapon.removeFromParent();
+        this._weapon = new Spear(this);
+        this._weapon.setPosition(pos);
+        this._headSprite.addChild(this._weapon, 10);
+        this._weapon.checkOrder();
     }
 });

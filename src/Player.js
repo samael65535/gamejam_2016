@@ -35,14 +35,14 @@ var Player = cc.Sprite.extend({
         this._isAvailable = true;
         this.scheduleUpdate();
         this._lastKeyCode = null;
-        this._weapon = new Sword(this);
-        this._headSprite.addChild(this._weapon);
-        this._weapon.checkOrder();
+
 
         this._board = new cc.LayerColor(cc.color(25, 25, 25, 255));
         this._board.setContentSize(cc.size(this._triggerWidth, this._triggerHeight));
         this.addChild(this._board, JAM_ORDER.board);
 
+
+        this.resetWeapon();
         return true;
     },
 
@@ -132,7 +132,7 @@ var Player = cc.Sprite.extend({
         this.listener = cc.EventListener.create({
             event: cc.EventListener.KEYBOARD,
             onKeyPressed:  function(keyCode, event){
-                if (this._isAvailable == false) return;
+                if (this.isAvailable == false) return;
                 var s = event.getCurrentTarget();
                 if (s.playerNum == 1) {
                     if (keyCode == cc.KEY.up) {
@@ -161,7 +161,6 @@ var Player = cc.Sprite.extend({
                     }
 
                     if (keyCode == cc.KEY.space) {
-                        // s.pushBack();
                         s.attack();
                     }
                 } else if (s.playerNum == 2) {
@@ -191,7 +190,6 @@ var Player = cc.Sprite.extend({
                     }
 
                     if (keyCode == cc.KEY.p) {
-                        // s.pushBack();
                         s.attack();
                     }
                 }
@@ -273,17 +271,27 @@ var Player = cc.Sprite.extend({
         }
         blood.setRotation(r);
         blood.setPosition(this.getPosition());
-        this.getParent().addChild(blood, JAM_ORDER.board);
+        GameLayerInstance.addChild(blood, JAM_ORDER.board);
         this.removeFromParent();
         this.removeAllChildren();
     },
 
     loadWeapon: function(weapon) {
+        if (weapon == this._weapon.itemType) return;
         var pos = this._weapon.getPosition();
         this._weapon.removeFromParent();
         this._weapon = new Spear(this);
         this._weapon.setPosition(pos);
+
         this._headSprite.addChild(this._weapon, 10);
         this._weapon.checkOrder();
+    },
+
+    resetWeapon: function() {
+        if (this._weapon) this._weapon.removeFromParent();
+        this._weapon = new Sword(this);
+        this._headSprite.addChild(this._weapon);
+        this._weapon.checkOrder();
     }
+
 });

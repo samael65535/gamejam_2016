@@ -8,6 +8,7 @@ var Sword = cc.Sprite.extend({
     startFrame: 1,
     endFrame: 3,
     frameName: "tuci0",
+    itemType: "sword",
     ctor: function(owner) {
         this._super("res/weapons/jian01.png");
         this._owner = owner;

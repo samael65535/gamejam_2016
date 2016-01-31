@@ -1,9 +1,9 @@
-
+var GameLayerInstance
 var GameLayer = cc.Layer.extend({
     sprite:null,
     _board: null,
     _playerArray: null,
-    _trapArray: null,
+    _triggerArray: null,
     _itemArray: null,
     _wallBG:null,
     ctor:function () {
@@ -12,14 +12,14 @@ var GameLayer = cc.Layer.extend({
 
         this._playerArray = [];
         this._itemArray = [];
-        this._trapArray = [];
+        this._triggerArray = [];
         var p = new Player(1);
         p.attr({
             x: size.width / 2,
             y: size.height / 2
         });
         this._playerArray.push(p);
-        this.addChild(p, JAM_ORDER.player);
+        this.addChild(p, JAM_ORDER.player, JAM_CHILD_TAG.PLAYER);
 
         p= new Player(2);
         p.attr({
@@ -27,8 +27,7 @@ var GameLayer = cc.Layer.extend({
             y: size.height / 4
         });
 
-        this._playerArray.push(p);
-        this.addChild(p, JAM_ORDER.player);
+        this.addChild(p, JAM_ORDER.player, JAM_CHILD_TAG.PLAYER);
 
         this._wallBG = new cc.Sprite("res/map/qiang.png");
         this._wallBG.attr({
@@ -44,6 +43,7 @@ var GameLayer = cc.Layer.extend({
             y: size.height * 0.1
         });
         this.addChild(this._board, JAM_ORDER.board);
+
         for (var i = 1 ; i <= 4; i++) {
             var size = cc.size(cc.winSize.width, 6);
             if (i % 2 == 0) size = cc.size(6, cc.winSize.height);
@@ -64,25 +64,35 @@ var GameLayer = cc.Layer.extend({
                     break;
             }
             wall.setPosition(pos);
-            this.addChild(wall, JAM_ORDER.player);
-            this._trapArray.push(wall)
+            this.addChild(wall, JAM_ORDER.player, JAM_CHILD_TAG.TRIGGER);
         }
-        p = new SpearItem();
-        this._itemArray.push(p);
+
+        var p = new SpearItem(false,  0);
         p.attr({
-            x: size.width / 4,
-            y: size.height / 4
+            x: cc.winSize.width / 4,
+            y: cc.winSize.height / 4
         });
-        this.addChild(p,JAM_ORDER.board);
+        this.addChild(p,JAM_ORDER.board, JAM_CHILD_TAG.ITEM);
 
         this.scheduleUpdate();
+        GameLayerInstance = this;
         return true;
     },
 
     update: function(dt) {
+
+        this._itemArray = _.filter(this.getChildren(), function(v, k) {
+            return v.getTag() == JAM_CHILD_TAG.ITEM;
+        }, this);
+        this._playerArray = _.filter(this.getChildren(), function(v, k) {
+            return v.getTag() == JAM_CHILD_TAG.PLAYER
+        }, this);
+        this._triggerArray = _.filter(this.getChildren(), function(v, k) {
+            return v.getTag() == JAM_CHILD_TAG.TRIGGER
+        }, this);
+
         this.checkGround(dt); // 地图道具
         this.checkPlayerEach(dt); // 玩家相互判定
-        this.checkBoard(dt);   // 出界
         this.checkWeapons(dt); // 武器碰撞判定
         this.checkTrigger(dt); // 地面陷阱判定
     },
@@ -91,7 +101,7 @@ var GameLayer = cc.Layer.extend({
         _.each(this._itemArray, function(v, k) {
             v.checkPlayer(this._playerArray);
             v.checkItem(this._itemArray);
-            v.checkTrigger(this._itemArray);
+            v.checkTrigger(this._triggerArray);
         }, this);
     },
 
@@ -102,7 +112,7 @@ var GameLayer = cc.Layer.extend({
     },
 
     checkTrigger: function(dt) {
-        _.each(this._trapArray, function(v, k) {
+        _.each(this._triggerArray, function(v, k) {
             v.checkPlayer(this._playerArray);
         }, this)
     },
@@ -112,15 +122,6 @@ var GameLayer = cc.Layer.extend({
             var weapon = v._weapon;
             weapon.checkDamage(this._playerArray);
         }, this)
-    },
-
-    checkBoard: function() {
-        var rect = this._board.getBoundingBox();
-        _.each(this._playerArray, function(v, k) {
-            var pos = v.getPosition();
-            var s = v.getBoundingBoxToWorld();
-
-        }, this);
     }
 });
 

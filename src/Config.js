@@ -16,3 +16,9 @@ var JAM_ORDER = {
     board: 10,
     player: 20
 };
+
+var JAM_CHILD_TAG = {
+    ITEM: 1,
+    PLAYER: 2,
+    TRIGGER: 3
+};

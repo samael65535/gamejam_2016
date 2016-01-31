@@ -122,7 +122,7 @@ var Player = cc.Sprite.extend({
                     GameLayerInstance._startLayer = null;
                 }
                 var s = event.getCurrentTarget();
-                if (s.playerNum == 1) {
+                if (s.playerNum == 2) {
                     if (keyCode == cc.KEY.up) {
                         s._movingType = JAM_CONFIG.UP;
                         s._isMoving = true;
@@ -151,7 +151,7 @@ var Player = cc.Sprite.extend({
                     if (keyCode == cc.KEY.p) {
                         s.attack();
                     }
-                } else if (s.playerNum == 2) {
+                } else if (s.playerNum == 1) {
                     if (keyCode == cc.KEY.w) {
                         s._movingType = JAM_CONFIG.UP;
                         s._isMoving = true;
@@ -189,11 +189,11 @@ var Player = cc.Sprite.extend({
                     s._isMoving = false;
                     s._lastKeyCode = null;
                 }
-                if (s.playerNum == 1) {
+                if (s.playerNum == 2) {
                     if (keyCode == cc.KEY.p) {
                         s.releaseAttack();
                     }
-                } else if (s.playerNum == 2){
+                } else if (s.playerNum == 1){
                     if (keyCode == cc.KEY.space) {
                         s.releaseAttack();
                     }

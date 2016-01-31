@@ -99,12 +99,12 @@ var GameLayer = cc.Layer.extend({
 
         //
         var r1 = new Reborn();
-        r1.setPosition(cc.winSize.width / 4 * 3, cc.winSize.height / 2);
+        r1.setPosition(cc.winSize.width / 4, cc.winSize.height / 2);
         this.addChild(r1, JAM_ORDER.trigger,JAM_CHILD_TAG.TRIGGER);
         this._r1 = r1;
 
         var r2 = new Reborn();
-        r2.setPosition(cc.winSize.width / 4, cc.winSize.height / 2);
+        r2.setPosition(cc.winSize.width / 4 * 3, cc.winSize.height / 2);
         this.addChild(r2, JAM_ORDER.trigger,JAM_CHILD_TAG.TRIGGER);
         spurSize.height += 20;
         this._r2 = r2;
@@ -201,13 +201,6 @@ var GameLayer = cc.Layer.extend({
             this._score1 += 1;
             this._score1Label.setString("1P 得分: " + this._score1)
         }
-
-
-        this._score2Label = new cc.LabelTTF("2P 得分: " + this._score2, "Arial", 30);
-        this._score2Label.setPosition(cc.winSize.width - 300,  20)
-        var player = _.filter(this._playerArray, function(v) {
-            return v.isDeath == false;
-        })[0];
         var f = 1;
         if (pos.x > cc.winSize.width / 2) f = 1;
         else f = 2;

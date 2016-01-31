@@ -14,6 +14,7 @@ var Player = cc.Sprite.extend({
     isDeath: false,
     _triggerWidth: 50,
     _triggerHeight: 20,
+    _startLayer: null,
     ctor: function(playerNum) {
         this._super("res/dongzuo-1p/zou01-1p.png");
         this.setCascadeColorEnabled(true);
@@ -35,12 +36,6 @@ var Player = cc.Sprite.extend({
         this._isAvailable = true;
         this.scheduleUpdate();
         this._lastKeyCode = null;
-
-
-        this._board = new cc.LayerColor(cc.color(25, 25, 25, 255));
-        this._board.setContentSize(cc.size(this._triggerWidth, this._triggerHeight));
-        this.addChild(this._board, JAM_ORDER.board);
-
 
         this.resetWeapon();
         return true;
@@ -133,6 +128,10 @@ var Player = cc.Sprite.extend({
             event: cc.EventListener.KEYBOARD,
             onKeyPressed:  function(keyCode, event){
                 if (this.isAvailable == false) return;
+                if (GameLayerInstance._startLayer) {
+                    GameLayerInstance._startLayer.removeFromParent();
+                    GameLayerInstance._startLayer = null;
+                }
                 var s = event.getCurrentTarget();
                 if (s.playerNum == 1) {
                     if (keyCode == cc.KEY.up) {
@@ -160,7 +159,7 @@ var Player = cc.Sprite.extend({
                         s._lastKeyCode = keyCode;
                     }
 
-                    if (keyCode == cc.KEY.space) {
+                    if (keyCode == cc.KEY.p) {
                         s.attack();
                     }
                 } else if (s.playerNum == 2) {
@@ -189,7 +188,7 @@ var Player = cc.Sprite.extend({
                         s._lastKeyCode = keyCode;
                     }
 
-                    if (keyCode == cc.KEY.p) {
+                    if (keyCode == cc.KEY.space) {
                         s.attack();
                     }
                 }
@@ -271,11 +270,18 @@ var Player = cc.Sprite.extend({
         }
         blood.setRotation(r);
         var pos = this.getPosition()
+        this.setVisible(false);
         blood.setPosition(pos);
-        GameLayerInstance.addChild(blood, JAM_ORDER.board);
-        this.removeFromParent();
-        this.removeAllChildren();
-        GameLayerInstance.rebornPlayer(this.playerNum, pos);
+        blood.runAction(cc.sequence(
+            cc.delayTime(0.4),
+            cc.removeSelf(),
+            cc.callFunc(function() {
+                GameLayerInstance.rebornPlayer(this.playerNum, pos);
+                this.removeFromParent();
+                this.removeAllChildren()
+            }.bind(this))
+        ));
+        GameLayerInstance.addChild(blood, JAM_ORDER.trigger);
     },
 
     loadWeapon: function(weapon) {

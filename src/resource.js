@@ -48,7 +48,11 @@ var g_resources = [
     "res/map/dici01.png",
     "res/map/dici02.png",
     "res/map/huoju.png",
-    "res/map/jiguankaiguan.png"
+    "res/map/jiguankaiguan.png",
+
+    "res/star_layer.png"
+
+
 ];
 for (var i in res) {
     g_resources.push(res[i]);

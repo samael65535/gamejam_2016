@@ -130,6 +130,10 @@ var GameLayer = cc.Layer.extend({
 
         this.addChild(p, JAM_ORDER.player,JAM_CHILD_TAG.PLAYER);
 
+        this._startLayer = new cc.Sprite("res/start_layer.png");
+        this._startLayer.setPosition(cc.winSize.width / 2, cc.winSize.height / 2);
+        this.addChild(this._startLayer, 100);
+
         return true;
     },
 
@@ -178,12 +182,12 @@ var GameLayer = cc.Layer.extend({
         }, this)
     },
 
-    rebornPlayer: function(playerNum) {
+    rebornPlayer: function(playerNum, pos) {
         var player = _.filter(this._playerArray, function(v) {
             return v.isDeath == false;
         })[0];
         var f = 1;
-        if (player.getPositionX() > cc.winSize.width / 2) f = 1;
+        if (pos.x > cc.winSize.width / 2) f = 1;
         else f = 2;
         var p = new Player(playerNum);
         var r = this["_r" + f];

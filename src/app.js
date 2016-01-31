@@ -17,7 +17,7 @@ var GameLayer = cc.Layer.extend({
 
     ctor:function () {
         this._super();
-
+        cc.audioEngine.playMusic("res/sound/start.mp3", true);
         this._score1Label = new cc.LabelTTF("1P 得分: " + this._score1, "Arial", 30);
         this._score1Label.setPosition(300, 20);
         this.addChild(this._score1Label, 100);

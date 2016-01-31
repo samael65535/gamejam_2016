@@ -25,6 +25,7 @@ var Sword = cc.Sprite.extend({
     attack: function() {
         if (this._isProgressing == true) return;
         this._isProgressing = true;
+        cc.audioEngine.playEffect("res/sound/attack.mp3");
         this._owner.attackAnimation(this.frameName, this.startFrame, this.endFrame)
         var action = cc.moveBy(2.3/24, cc.p(0, 30));
         this.runAction(cc.sequence(

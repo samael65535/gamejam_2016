@@ -35,9 +35,13 @@ var g_resources = [
     "res/map/huoju.png",
     "res/map/jiguankaiguan.png",
 
-    "res/start_layer.png"
+    "res/start_layer.png",
 
-
+    "res/sound/start.mp3",
+    "res/sound/spear.mp3",
+    "res/sound/game.mp3",
+    "res/sound/death.mp3",
+    "res/sound/attack.mp3"
 ];
 for (var i in res) {
     g_resources.push(res[i]);

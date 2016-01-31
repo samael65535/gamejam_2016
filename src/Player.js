@@ -47,6 +47,7 @@ var Player = cc.Sprite.extend({
     },
 
     attackAnimation: function(weaponsName, start, end) {
+
         var frameName = "res/dongzuo-"+this.playerNum+"p/" + weaponsName;
         var animationAction = Util.createAnimation(frameName, start, end, 2/24, "-"+this.playerNum+"p.png");
         this.runAction(
@@ -116,6 +117,7 @@ var Player = cc.Sprite.extend({
             onKeyPressed:  function(keyCode, event){
                 if (this.isAvailable == false) return;
                 if (GameLayerInstance._startLayer) {
+                    cc.audioEngine.playMusic("res/sound/game.mp3", true);
                     GameLayerInstance._startLayer.removeFromParent();
                     GameLayerInstance._startLayer = null;
                 }
@@ -235,6 +237,7 @@ var Player = cc.Sprite.extend({
     doDeath: function(type) {
         if (this.isDeath) return;
         this.isDeath = true;
+        cc.audioEngine.playEffect("res/sound/death.mp3");
         var blood = new cc.Sprite("res/effect/feijian01.png");
         var action = Util.createAnimation("res/effect/feijian0", 1, 4, 2/24, ".png");
         blood.runAction(action);

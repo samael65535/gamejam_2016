@@ -60,7 +60,6 @@ var SpearItem = cc.Sprite.extend({
         this.fromPlayer = 0;
         var oldRot = this.getRotation();
         var radians = cc.degreesToRadians(oldRot);
-        GameLayerInstance._itemArray.push(this)
         var x = Math.sin(radians) * 1 * -10;
         var y = Math.cos(radians) * 1 * -10;
         this.runAction(cc.sequence(

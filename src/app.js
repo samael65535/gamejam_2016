@@ -49,6 +49,7 @@ var GameLayer = cc.Layer.extend({
             var size = cc.size(cc.winSize.width, 6);
             if (i % 2 == 0) size = cc.size(6, cc.winSize.height);
             var wall = new Wall(size);
+            wall.type = i;
             var pos = 0;
             switch(i){
                 case 1:
@@ -150,6 +151,7 @@ var GameLayer = cc.Layer.extend({
     },
 
     update: function(dt) {
+
         this._itemArray = _.filter(this.getChildren(), function(v, k) {
             return v.getTag() == JAM_CHILD_TAG.ITEM;
         }, this);
@@ -159,7 +161,7 @@ var GameLayer = cc.Layer.extend({
         this._triggerArray = _.filter(this.getChildren(), function(v, k) {
             return v.getTag() == JAM_CHILD_TAG.TRIGGER
         }, this);
-
+        this.createSpear();
         this.checkGround(dt); // 地图道具
         this.checkPlayerEach(dt); // 玩家相互判定
         this.checkWeapons(dt); // 武器碰撞判定
@@ -211,6 +213,29 @@ var GameLayer = cc.Layer.extend({
             y: r.getPositionY()
         });
         this.addChild(p, JAM_ORDER.player, JAM_CHILD_TAG.PLAYER);
+    },
+
+    createSpear: function() {
+        var c = _.countBy(this._itemArray, function(v) {
+            return v.itemType == "spear";
+        }, this);
+
+        if (c.true > 0) return;
+
+        var posList = [
+            [cc.p(123 / 2 + 30, cc.winSize.height - 98 / 2 - 30), cc.p(0.5,0.5)],
+            [cc.p(cc.winSize.width / 2, cc.winSize.height - 98/2 - 30), cc.p(0.5,0.5)],
+            [cc.p(cc.winSize.width - 123/2 - 30, cc.winSize.height - 98/2 - 30), cc.p(0.5, 0.5)],
+
+            [cc.p(123/2 + 30, 98 / 2 + 30), cc.p(0.5, 0.5)],
+            [cc.p(cc.winSize.width / 2, 98/2+ 30), cc.p(0.5, 0.5)],
+            [cc.p(cc.winSize.width - 123/2-30 ,98/2 + 30), cc.p(0.5, 0.5)]
+        ];
+        var tp = _.sample(posList);
+        var p = new SpearItem(false, 0);
+        p.setPosition(tp[0]);
+        this.addChild(p, JAM_ORDER.board + 1, JAM_CHILD_TAG.ITEM);
+
     }
 
 });

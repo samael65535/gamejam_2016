@@ -48,18 +48,20 @@ var Sword = cc.Sprite.extend({
             var rectW2 = p._weapon.getBoundingBoxToWorld();
             var rect2 = p.getBoundingBoxToWorld();
             var rect1 = this._owner.getBoundingBoxToWorld();
+            var pos1 = cc.p(rectW1.x, rectW1.y);
+            var pos2 = cc.p(rect2.x, rect2.y);
+            var pos3 = cc.p(rectW2.x, rectW2.y);
+            var pos4 = cc.p(rect1.x, rect1.y);
             if (cc.rectIntersectsRect(rectW1, rectW2)) {
                 p.pushBack();
                 this._owner.pushBack();
             }
             if (cc.rectIntersectsRect(rectW1, rect2) && !p.isDeath) {
-                var pos1 = cc.p(rectW1.x, rectW1.y);
-                var pos2 = cc.p(rect2.x, rect2.y);
+
                 p.doDeath(Util.faceType(pos1, pos2));
             }
             if (cc.rectIntersectsRect(rectW2, rect1) && !this._owner.isDeath) {
-                var pos3 = cc.p(rectW2.x, rectW2.y);
-                var pos4 = cc.p(rect1.x, rect1.y);
+
                 this._owner.doDeath(Util.faceType(pos3,  pos4));
             }
         }, this);

@@ -207,12 +207,28 @@ var GameLayer = cc.Layer.extend({
         if (pos.x > cc.winSize.width / 2) f = 1;
         else f = 2;
         var p = new Player(playerNum);
+
         var r = this["_r" + f];
         p.attr({
             x: r.getPositionX(),
             y: r.getPositionY()
         });
         this.addChild(p, JAM_ORDER.player, JAM_CHILD_TAG.PLAYER);
+
+        _.each(this.getChildren(), function(v, k){
+            if (v.getTag() != JAM_CHILD_TAG.PLAYER) return;
+            var pos = v.getPosition();
+            if (playerNum == v.playerNum) return;
+            if (pos.x == r.getPositionX() && r.getPositionY() == pos.y) {
+                if (f == 1) f = 2;
+                else f = 1;
+                r = this["_r" + f];
+                p.attr({
+                    x: r.getPositionX(),
+                    y: r.getPositionY()
+                });
+            }
+        }, this);
     },
 
     createSpear: function() {
@@ -235,7 +251,6 @@ var GameLayer = cc.Layer.extend({
         var p = new SpearItem(false, 0);
         p.setPosition(tp[0]);
         this.addChild(p, JAM_ORDER.board + 1, JAM_CHILD_TAG.ITEM);
-
     }
 
 });

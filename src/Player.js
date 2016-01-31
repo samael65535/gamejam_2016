@@ -259,17 +259,14 @@ var Player = cc.Sprite.extend({
                 break;
         }
         blood.setRotation(r);
-        var pos = this.getPosition();
         this.setVisible(false);
-        this.removeFromParent();
-        this.removeAllChildren();
-        blood.setPosition(pos);
+        blood.setPosition(this.getPosition());
         var playerNum = this.playerNum;
         blood.runAction(cc.sequence(
-            cc.delayTime(0.4),
-            cc.removeSelf(),
+            cc.delayTime(0.5),
             cc.callFunc(function() {
-                GameLayerInstance.rebornPlayer(playerNum, pos);
+                GameLayerInstance.rebornPlayer(playerNum, this.getPosition());
+                this.removeFromParent();
             }.bind(this))
         ));
         GameLayerInstance.addChild(blood, JAM_ORDER.trigger);

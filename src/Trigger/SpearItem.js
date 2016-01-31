@@ -47,7 +47,7 @@ var SpearItem = cc.Sprite.extend({
         _.each(itemArray, function(v) {
             if (v == this) return;
             if (Util.checkIntersects(v, this) && v.isOnGround == this.isOnGround && v.isOnGround == false) {
-                v.stopAllActions();
+                this.pushBack();
             }
         },this);
     },

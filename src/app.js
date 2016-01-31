@@ -99,12 +99,12 @@ var GameLayer = cc.Layer.extend({
 
         //
         var r1 = new Reborn();
-        r1.setPosition(cc.winSize.width / 4, cc.winSize.height / 2);
+        r1.setPosition(cc.winSize.width / 4 * 3, cc.winSize.height / 2);
         this.addChild(r1, JAM_ORDER.trigger,JAM_CHILD_TAG.TRIGGER);
         this._r1 = r1;
 
         var r2 = new Reborn();
-        r2.setPosition(cc.winSize.width / 4 * 3, cc.winSize.height / 2);
+        r2.setPosition(cc.winSize.width / 4, cc.winSize.height / 2);
         this.addChild(r2, JAM_ORDER.trigger,JAM_CHILD_TAG.TRIGGER);
         spurSize.height += 20;
         this._r2 = r2;
